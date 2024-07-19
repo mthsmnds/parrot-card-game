@@ -1,4 +1,3 @@
-let cardAmount = 0;
 let cardImg = [{element:"assets/bobrossparrot.gif", id: 1},
         {element:"assets/explodyparrot.gif", id: 2},
         {element:"assets/fiestaparrot.gif", id: 3},
@@ -8,10 +7,11 @@ let cardImg = [{element:"assets/bobrossparrot.gif", id: 1},
         {element:"assets/revertitparrot.gif", id: 7},
 ];
 
+let cardAmount = 0;
 let cardsToShow = [];    
 let selectedCards = [];
 let score = 0;
-
+let lockedCards = []
 
 
 gameStart();
@@ -69,7 +69,7 @@ function defineCards() {
                  `;
                  cards.innerHTML += cardElement;
         }
-        console.log(cardsToShow);
+        // console.log(cardsToShow);
 
 }
 
@@ -77,27 +77,62 @@ function cardSelect(card) {
         //função onClick que define se a carta está selecionada
         const frontFace = card.querySelector(".front-face");
         const backFace = card.querySelector(".back-face");
-
-        frontFace.classList.toggle("front-face-flip");
-        backFace.classList.toggle("back-face-flip");
-
-
         
-        console.log(selectedCards);
+        frontFace.classList.add("front-face-flip");
+        backFace.classList.add("back-face-flip");
+        
+        const getCardID = card.querySelector(".back-face img");
 
-}
+        selectedCards.push(getCardID.src);
 
-function checkCard(){
+        if(selectedCards.length == 2){
+                checkCard();
+        }
+        
+        // console.log(selectedCards);
+
+        function checkCard(){
         //checa se as cartas são par e soma pontos por jogada.
-        
-        let isMatch = false;
-        score += 2;
+                
+                let firstPick = selectedCards[0];
+                let secondPick = selectedCards[1];
+                let isMatch = false;
+                score += 2;
 
-        if(selectedCards[0] === selectedCards[1] ){
-                isMatch = true;
+
+                if(firstPick === secondPick ){
+                        isMatch = true;
+                        setTimeout(disableCards, 800);
+                }
+                else{
+                        selectedCards = [];
+                        setTimeout(unflipCards, 1000);
+                }
+                
+                console.log(firstPick, secondPick);
+                
+                finishGame();
         }
-        else{
-                cardSelect();
+        
+        function disableCards(){
+                card.classList.add("locked");
+                lockedCards.push(firstPick, secondPick);
+                selectedCards = [];
+                firstPick =[];
+                secondPick =[];
+                isMatch = false;
         }
+
+        function unflipCards(){
+                frontFace.classList.remove("front-face-flip");
+                backFace.classList.remove("back-face-flip");
+        }
+
+        
 }
 
+function finishGame(){
+        if(lockedCards.length == cardsToShow.length){
+                alert("Fim de jogo! Você fez " + score + "jogadas");
+        }
+}

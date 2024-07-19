@@ -67,6 +67,10 @@ body {
         transform: rotateY(-180deg);
 }
 
+.locked{
+        pointer-events: none;
+}
+
 /* -----------------------MEDIA QUERY---------------------- */
 
 @media (max-width: 614px ){
