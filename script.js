@@ -6,8 +6,12 @@ let cardImg = [{element:"assets/bobrossparrot.gif", id: 1},
         {element:"assets/tripletsparrot.gif", id: 5},
         {element:"assets/unicornparrot.gif", id: 6},
         {element:"assets/revertitparrot.gif", id: 7},
+];
 
-]
+let cardsToShow = [];    
+let selectedCards = [];
+let score = 0;
+
 
 
 gameStart();
@@ -28,6 +32,7 @@ while (isEven == false) {
         if (cardAmount >= 4 && cardAmount <= 14 && cardAmount % 2 === 0) {
                 alert("Vamos começar!");
                 isEven = true;
+                cardAmount = cardAmount/2;
                 defineCards();
         }
         else {
@@ -39,30 +44,60 @@ while (isEven == false) {
 
 function defineCards() {
         //pegar o número de cartas, definir quantas vão ser mostradas e embaralhar as imagens
+
         const cards = document.querySelector(".cardContainer");
         cardImg.sort(comparador);
      
 
         for(let i = 0; i < cardAmount; i++){
-                const cardElement = `
-                <div class="card">
-                        <div class="front-face face"  onclick=cardSelect(this)>
-                                <img src="assets/parrot.png" />
-                                <div class="back-face face" >
-                                <img src ="${cardImg[i].element}" />
-                                </div>
-                        </div>                      
-                </div>
-                `;
-                cards.innerHTML += cardElement;
+                cardsToShow.push(cardImg[i]);
+                cardsToShow.push(cardImg[i]);
         }
+
+        cardsToShow.sort(comparador);
+
+        for(let i = 0; i < cardsToShow.length; i++){
+                const cardElement = `
+                 <div class="card" onclick=cardSelect(this)>
+                         <div class="front-face face"  >
+                                 <img src="assets/parrot.png" />
+                                 </div>                      
+                        <div class="back-face face" >
+                                 <img src ="${cardsToShow[i].element}" />
+                        </div>
+                 </div>
+                 `;
+                 cards.innerHTML += cardElement;
+        }
+        console.log(cardsToShow);
+
 }
 
-function cardSelect(face) {
+function cardSelect(card) {
         //função onClick que define se a carta está selecionada
-        face.classList.toggle("front-face-flip");
+        const frontFace = card.querySelector(".front-face");
+        const backFace = card.querySelector(".back-face");
 
-        console.log(face);
+        frontFace.classList.toggle("front-face-flip");
+        backFace.classList.toggle("back-face-flip");
 
+
+        
+        console.log(selectedCards);
+
+}
+
+function checkCard(){
+        //checa se as cartas são par e soma pontos por jogada.
+        
+        let isMatch = false;
+        score += 2;
+
+        if(selectedCards[0] === selectedCards[1] ){
+                isMatch = true;
+        }
+        else{
+                cardSelect();
+        }
 }
 
